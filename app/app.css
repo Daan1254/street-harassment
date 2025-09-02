@@ -3,6 +3,18 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  
+  /* Street Harassment Quiz Color Palette */
+  --color-white-smoke: #F5F5F5;
+  --color-persian-pink: #EA79B5;
+  --color-fairy-tale: #E8C5D8;
+  --color-red-cmyk: #ED2F2F;
+  
+  /* Quiz specific colors */
+  --color-quiz-bg: var(--color-persian-pink);
+  --color-quiz-primary: var(--color-persian-pink);
+  --color-quiz-secondary: var(--color-fairy-tale);
+  --color-quiz-accent: var(--color-red-cmyk);
 }
 
 html,
