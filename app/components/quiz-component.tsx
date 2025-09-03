@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuiz } from "~/providers/quiz-provider";
 
 export function QuizComponent() {
@@ -58,6 +58,13 @@ export function QuizComponent() {
     previousQuestion();
   };
 
+  // Effect om showExplanation te updaten als we naar een vraag gaan die al beantwoord is
+  React.useEffect(() => {
+    if (currentQuestion && userAnswers[currentQuestion.id] !== undefined) {
+      setShowExplanation(true);
+    }
+  }, [currentQuestion, userAnswers]);
+
   const canGoNext = questionNumber < totalQuestions;
   const canGoPrevious = questionNumber > 1;
 
@@ -104,7 +111,9 @@ export function QuizComponent() {
           <div className="w-full bg-white/20 rounded-full h-2">
             <div
               className="bg-white h-2 rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${(questionNumber / totalQuestions) * 100}%` }}
+              style={{
+                width: `${((questionNumber - 1) / totalQuestions) * 100}%`,
+              }}
             />
           </div>
         </div>
@@ -145,17 +154,14 @@ export function QuizComponent() {
             <div className="space-y-4">
               {currentQuestion.options.map((option, index) => {
                 const isSelected = selectedAnswer === index;
-                const isCorrectOption = index === currentQuestion.correctAnswer;
                 const showResult = hasAnswered && showExplanation;
 
                 let buttonClasses =
                   "group w-full p-6 text-left rounded-2xl border-2 transition-all duration-200 ";
 
                 if (showResult) {
-                  if (isCorrectOption) {
-                    buttonClasses += "bg-green-50 border-green-400 shadow-lg";
-                  } else if (isSelected && !isCorrectOption) {
-                    buttonClasses += "bg-red-50 border-red-400 shadow-lg";
+                  if (isSelected) {
+                    buttonClasses += "bg-blue-50 border-blue-400 shadow-lg";
                   } else {
                     buttonClasses += "bg-white/50 border-white/30";
                   }
@@ -177,33 +183,26 @@ export function QuizComponent() {
                     <div className="flex items-center">
                       <div
                         className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mr-6 transition-colors ${
-                          showResult && isCorrectOption
-                            ? "bg-green-500 text-white"
-                            : showResult && isSelected && !isCorrectOption
-                              ? "bg-red-500 text-white"
-                              : isSelected
-                                ? "bg-pink-500 text-white"
-                                : "bg-gray-100 text-gray-600 group-hover:bg-pink-100 group-hover:text-pink-600"
+                          showResult && isSelected
+                            ? "bg-blue-500 text-white"
+                            : isSelected
+                              ? "bg-pink-500 text-white"
+                              : "bg-gray-100 text-gray-600 group-hover:bg-pink-100 group-hover:text-pink-600"
                         }`}
                       >
                         {String.fromCharCode(65 + index)}
                       </div>
                       <span
                         className={`flex-1 font-semibold text-lg ${
-                          showResult && isCorrectOption
-                            ? "text-green-800"
-                            : showResult && isSelected && !isCorrectOption
-                              ? "text-red-800"
-                              : "text-gray-800"
+                          showResult && isSelected
+                            ? "text-blue-800"
+                            : "text-gray-800"
                         }`}
                       >
                         {option}
                       </span>
-                      {showResult && isCorrectOption && (
-                        <div className="text-green-500 text-2xl ml-4">✓</div>
-                      )}
-                      {showResult && isSelected && !isCorrectOption && (
-                        <div className="text-red-500 text-2xl ml-4">✗</div>
+                      {showResult && isSelected && (
+                        <div className="text-blue-500 text-xl ml-4">→</div>
                       )}
                     </div>
                   </button>
@@ -214,23 +213,25 @@ export function QuizComponent() {
         </div>
 
         {/* Explanation */}
-        {showExplanation && currentQuestion.explanation && (
-          <div className="mt-12">
-            <div className="bg-white rounded-2xl shadow-xl p-8 border-l-4 border-pink-500">
-              <div className="flex items-start">
-                <div className="text-3xl mr-4">💡</div>
-                <div>
-                  <h4 className="font-bold text-gray-800 text-xl mb-3">
-                    Uitleg
-                  </h4>
-                  <p className="text-gray-700 leading-relaxed text-lg">
-                    {currentQuestion.explanation}
-                  </p>
+        {showExplanation &&
+          currentQuestion.explanations &&
+          selectedAnswer !== undefined && (
+            <div className="mt-12">
+              <div className="bg-white rounded-2xl shadow-xl p-8 border-l-4 border-blue-500">
+                <div className="flex items-start">
+                  <div className="text-3xl mr-4">💭</div>
+                  <div>
+                    <h4 className="font-bold text-gray-800 text-xl mb-3">
+                      Over jouw keuze
+                    </h4>
+                    <p className="text-gray-700 leading-relaxed text-lg">
+                      {currentQuestion.explanations[selectedAnswer]}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
         {/* Navigation */}
         <div className="flex justify-between items-center mt-12">

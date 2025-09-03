@@ -6,7 +6,7 @@ export interface QuizQuestion {
   question: string;
   options: string[];
   correctAnswer: number;
-  explanation?: string;
+  explanations: string[]; // Array of explanations for each answer option
 }
 
 export interface QuizScenario {
@@ -53,8 +53,12 @@ const QUIZ_SCENARIOS: QuizScenario[] = [
           "Doorlopen, dit gebeurt nu eenmaal in uitgaansgebieden",
         ],
         correctAnswer: 0,
-        explanation:
-          "Door direct contact te maken met de persoon die lastig gevallen wordt, laat je zien dat er iemand let op. Dit geeft haar de kans om aan te geven of ze hulp wil, zonder de situatie meteen te escaleren door de man te confronteren.",
+        explanations: [
+          "Uitstekende keuze! Door direct contact te maken met haar, laat je zien dat er iemand let op en geef je haar de controle. Ze kan aangeven of ze hulp wil zonder dat je de situatie escaleert. Dit is de veiligste eerste stap.",
+          "Dit kan werken, maar is riskanter. Directe confrontatie kan de man agressief maken en de situatie escaleren. Bovendien neem je de controle weg bij de vrouw - misschien wil zij juist geen scene.",
+          "112 is voor acute noodsituaties. Hoewel dit vervelend is, is het nog geen direct gevaar. Probeer eerst mildere interventies. Als de situatie escaleert, dan wel 112 bellen.",
+          "Begrijpelijk dat je twijfelt, maar hierdoor blijft zij alleen in een vervelende situatie. Zelfs kleine signalen van steun kunnen veel betekenen. Je hoeft geen held te zijn, gewoon laten merken dat je er bent.",
+        ],
       },
       {
         id: "q1_2",
@@ -67,8 +71,12 @@ const QUIZ_SCENARIOS: QuizScenario[] = [
           "Een foto maken van de man voor het geval er iets gebeurt",
         ],
         correctAnswer: 1,
-        explanation:
-          "Door aan te bieden samen ergens naar binnen te gaan, help je haar weg uit de situatie zonder directe confrontatie. Een café of andere drukke plek biedt veiligheid en de man zal waarschijnlijk niet volgen naar binnen.",
+        explanations: [
+          "Begrijpelijk dat je haar wilt verdedigen, maar nu heb je bevestigd dat zij hulp nodig heeft. Directe confrontatie kan de man agressief maken. Beter is om haar eerst in veiligheid te brengen.",
+          "Perfect! Door samen naar binnen te gaan, breng je haar weg uit de situatie zonder confrontatie. Een café biedt veiligheid, personeel dat kan helpen, en de man zal waarschijnlijk niet naar binnen volgen.",
+          "Dit kan een goede aanvullende stap zijn, maar los het niet direct op - hij blijft haar ondertussen volgen. Eerst zorgen dat ze veilig is, dan pas iemand bellen.",
+          "Dit kan nuttig zijn voor later, maar helpt haar nu niet. Focus eerst op haar veiligheid. Bovendien kan hij agressief reageren als hij je ziet fotograferen.",
+        ],
       },
     ],
   },
@@ -90,8 +98,12 @@ const QUIZ_SCENARIOS: QuizScenario[] = [
           "De situatie filmen als bewijs voor later",
         ],
         correctAnswer: 1,
-        explanation:
-          "Door je fysiek tussen hen in te bewegen met een neutrale reden ('ik moet eruit'), onderbreek je het gedrag zonder confrontatie. Dit geeft de vrouw ruimte en laat de man weten dat er wordt opgelet.",
+        explanations: [
+          "In een volle trein kan dit heel vervelend worden. De man kan ontkennen, anderen gaan staren, en de vrouw kan zich nog ongemakkelijker voelen. In krappe ruimtes is subtiele interventie vaak effectiever.",
+          "Slimme aanpak! Door je tussen hen te bewegen met een neutrale reden verstoort je het gedrag zonder confrontatie. Je geeft haar ruimte en hij snapt dat er wordt opgelet. Simpel maar effectief.",
+          "De noodknop is voor noodsituaties met direct gevaar. Dit kan overreactie lijken en trekt veel aandacht. Probeer eerst subtielere methoden, maar goed dat je aan autoriteit denkt.",
+          "Kan nuttig zijn, maar lost de situatie nu niet op. Bovendien kan hij agressief reageren als hij je ziet filmen. Focus eerst op het stoppen van het gedrag, bewijs is voor later.",
+        ],
       },
       {
         id: "q2_2",
@@ -104,8 +116,12 @@ const QUIZ_SCENARIOS: QuizScenario[] = [
           "'Misschien was het toch per ongeluk door de drukte'",
         ],
         correctAnswer: 0,
-        explanation:
-          "Het is belangrijk om haar gevoel te valideren. Veel mensen twijfelen aan zichzelf in dit soort situaties. Door te bevestigen dat haar gevoel klopt, help je haar vertrouwen in haar eigen waarneming te behouden.",
+        explanations: [
+          "Perfecte reactie! Je valideert haar gevoel en bevestigt dat haar waarneming klopt. Veel mensen twijfelen aan zichzelf bij intimidatie. Door dit te zeggen help je haar vertrouwen te behouden.",
+          "Hoewel dit waar kan zijn, bagatelliseer je hiermee haar ervaring. 'Het gebeurt vaker' betekent niet dat het oké is. Ze heeft recht op validatie van haar gevoelens, niet normalisering.",
+          "Dit is victim blaming. Je legt de verantwoordelijkheid bij haar terwijl de man het probleem is. Veel mensen durven niet hardop te protesteren uit angst of schaamte. Niet haar schuld.",
+          "Hiermee twijfel je aan haar waarneming en gevoel. 'Per ongeluk' herhaaldelijk tegen dezelfde persoon? Haar instinct klopt meestal. Geloof en ondersteun haar ervaring.",
+        ],
       },
     ],
   },
