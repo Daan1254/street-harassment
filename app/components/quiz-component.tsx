@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuiz } from "~/providers/quiz-provider";
 
 export function QuizComponent() {
@@ -23,8 +23,8 @@ export function QuizComponent() {
 
   if (!currentScenario || !currentQuestion) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-400 to-pink-600">
-        <div className="text-white text-2xl font-bold">Loading...</div>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-gray-800 text-2xl font-bold">Loading...</div>
       </div>
     );
   }
@@ -58,18 +58,37 @@ export function QuizComponent() {
     previousQuestion();
   };
 
+  // Effect om showExplanation te updaten als we naar een vraag gaan die al beantwoord is
+  React.useEffect(() => {
+    if (currentQuestion && userAnswers[currentQuestion.id] !== undefined) {
+      setShowExplanation(true);
+    }
+  }, [currentQuestion, userAnswers]);
+
   const canGoNext = questionNumber < totalQuestions;
   const canGoPrevious = questionNumber > 1;
 
   if (isQuizComplete && showExplanation === false) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pink-400 to-pink-600 flex items-center justify-center p-6">
-        <div className="bg-white rounded-3xl shadow-2xl p-12 text-center max-w-2xl w-full">
+      <div className="min-h-screen bg-white">
+        {/* Header */}
+        <div
+          className="text-white py-4 px-6"
+          style={{ backgroundColor: "var(--color-persian-pink)" }}
+        >
+          <h1 className="text-xl font-bold text-center">SSH</h1>
+        </div>
+
+        {/* Results Content */}
+        <div className="px-6 py-12 text-center">
           <div className="text-6xl mb-6">🎉</div>
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
             Fantastisch!
           </h1>
-          <div className="text-6xl font-bold text-pink-500 mb-6">
+          <div
+            className="text-6xl font-bold mb-6"
+            style={{ color: "var(--color-persian-pink)" }}
+          >
             {score}/{totalQuestions}
           </div>
           <p className="text-xl text-gray-600 mb-8">
@@ -78,7 +97,8 @@ export function QuizComponent() {
           </p>
           <button
             onClick={resetQuiz}
-            className="bg-gradient-to-r from-pink-500 to-pink-600 text-white px-10 py-4 rounded-full font-bold text-lg hover:from-pink-600 hover:to-pink-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
+            className="text-white px-10 py-4 rounded-full font-bold text-lg transition-all duration-200 shadow-lg"
+            style={{ backgroundColor: "var(--color-persian-pink)" }}
           >
             Opnieuw Beginnen
           </button>
@@ -88,182 +108,175 @@ export function QuizComponent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-400 to-pink-600">
-      {/* Header with Progress */}
-      <div className="bg-white/10 backdrop-blur-md border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="text-white/90 font-medium">
-              Scenario {questionNumber} van {totalQuestions}
-            </div>
-            <div className="text-white/90 text-sm">
-              {Math.round(((questionNumber - 1) / totalQuestions) * 100)}%
-              voltooid
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <div
+        className="text-white py-4 px-6"
+        style={{ backgroundColor: "var(--color-persian-pink)" }}
+      >
+        <h1 className="text-xl font-bold text-center">SSH</h1>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="bg-white px-6 py-4">
+        <div className="flex items-center justify-between mb-2">
+          <button
+            onClick={handlePrevious}
+            disabled={!canGoPrevious}
+            className={`text-2xl ${canGoPrevious ? "text-gray-600" : "text-gray-300"}`}
+          >
+            ←
+          </button>
+
+          <div className="flex-1 mx-4">
+            <div className="bg-gray-200 rounded-full h-2">
+              <div
+                className="h-2 rounded-full transition-all duration-300"
+                style={{
+                  backgroundColor: "var(--color-persian-pink)",
+                  width: `${(questionNumber / totalQuestions) * 100}%`,
+                }}
+              />
             </div>
           </div>
-          <div className="w-full bg-white/20 rounded-full h-2">
-            <div
-              className="bg-white h-2 rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${(questionNumber / totalQuestions) * 100}%` }}
-            />
-          </div>
+
+          <button
+            onClick={handleNext}
+            disabled={!hasAnswered || !canGoNext}
+            className={`text-2xl ${hasAnswered && canGoNext ? "text-gray-600" : "text-gray-300"}`}
+          >
+            →
+          </button>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Side - Scenario */}
-          <div className="order-2 lg:order-1">
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-              <div className="aspect-video bg-gray-50 flex items-center justify-center">
-                <img
-                  src={currentScenario.image}
-                  alt={currentScenario.title}
-                  className="max-w-full max-h-full object-contain"
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="font-bold text-gray-800 text-lg mb-3">
-                  {currentScenario.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {currentScenario.description}
-                </p>
-              </div>
-            </div>
+      <div className="px-6 py-6">
+        {/* Question Title */}
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+          What would you do in this situation?
+        </h2>
+
+        {/* Scenario Image */}
+        <div className="mb-6 flex justify-center">
+          <div className="w-full max-w-sm">
+            <img
+              src={currentScenario.image}
+              alt={currentScenario.title}
+              className="w-full rounded-2xl shadow-lg"
+            />
           </div>
+        </div>
 
-          {/* Right Side - Question & Answers */}
-          <div className="order-1 lg:order-2 space-y-8">
-            <div>
-              <h1 className="text-3xl lg:text-4xl font-bold text-white leading-tight">
-                {currentQuestion.question}
-              </h1>
-            </div>
+        {/* Scenario Description */}
+        <div className="mb-8 text-center">
+          <p className="text-gray-700 leading-relaxed">
+            {currentScenario.description}
+          </p>
+        </div>
 
-            <div className="space-y-4">
-              {currentQuestion.options.map((option, index) => {
-                const isSelected = selectedAnswer === index;
-                const isCorrectOption = index === currentQuestion.correctAnswer;
-                const showResult = hasAnswered && showExplanation;
+        {/* Answer Options */}
+        <div className="space-y-3 mb-8">
+          {currentQuestion.options.map((option, index) => {
+            const isSelected = selectedAnswer === index;
+            const showResult = hasAnswered && showExplanation;
 
-                let buttonClasses =
-                  "group w-full p-6 text-left rounded-2xl border-2 transition-all duration-200 ";
+            let buttonClasses =
+              "w-full p-4 text-left rounded-xl border-2 transition-all duration-200 ";
 
-                if (showResult) {
-                  if (isCorrectOption) {
-                    buttonClasses += "bg-green-50 border-green-400 shadow-lg";
-                  } else if (isSelected && !isCorrectOption) {
-                    buttonClasses += "bg-red-50 border-red-400 shadow-lg";
-                  } else {
-                    buttonClasses += "bg-white/50 border-white/30";
-                  }
-                } else if (isSelected) {
-                  buttonClasses +=
-                    "bg-white border-white shadow-lg transform scale-[1.02]";
-                } else {
-                  buttonClasses +=
-                    "bg-white/80 border-white/50 hover:bg-white hover:border-white hover:shadow-lg hover:transform hover:scale-[1.01]";
-                }
+            if (showResult) {
+              if (isSelected) {
+                buttonClasses += "border-2" + " bg-blue-50";
+                buttonClasses += " border-[var(--color-persian-pink)]";
+              } else {
+                buttonClasses += "bg-gray-50 border-gray-200";
+              }
+            } else if (isSelected) {
+              buttonClasses += "border-2" + " bg-blue-50";
+              buttonClasses += " border-[var(--color-persian-pink)]";
+            } else {
+              buttonClasses += "bg-white border-gray-200 hover:border-gray-300";
+            }
 
-                return (
-                  <button
-                    key={index}
-                    onClick={() => !hasAnswered && handleAnswerSelect(index)}
-                    disabled={hasAnswered}
-                    className={buttonClasses}
+            return (
+              <button
+                key={index}
+                onClick={() => !hasAnswered && handleAnswerSelect(index)}
+                disabled={hasAnswered}
+                className={buttonClasses}
+              >
+                <div className="flex items-center">
+                  <span
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-4 text-white"
+                    style={{
+                      backgroundColor: isSelected
+                        ? "var(--color-persian-pink)"
+                        : "#E5E7EB",
+                    }}
                   >
-                    <div className="flex items-center">
-                      <div
-                        className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mr-6 transition-colors ${
-                          showResult && isCorrectOption
-                            ? "bg-green-500 text-white"
-                            : showResult && isSelected && !isCorrectOption
-                              ? "bg-red-500 text-white"
-                              : isSelected
-                                ? "bg-pink-500 text-white"
-                                : "bg-gray-100 text-gray-600 group-hover:bg-pink-100 group-hover:text-pink-600"
-                        }`}
-                      >
-                        {String.fromCharCode(65 + index)}
-                      </div>
-                      <span
-                        className={`flex-1 font-semibold text-lg ${
-                          showResult && isCorrectOption
-                            ? "text-green-800"
-                            : showResult && isSelected && !isCorrectOption
-                              ? "text-red-800"
-                              : "text-gray-800"
-                        }`}
-                      >
-                        {option}
-                      </span>
-                      {showResult && isCorrectOption && (
-                        <div className="text-green-500 text-2xl ml-4">✓</div>
-                      )}
-                      {showResult && isSelected && !isCorrectOption && (
-                        <div className="text-red-500 text-2xl ml-4">✗</div>
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+                    <span
+                      className={isSelected ? "text-white" : "text-gray-600"}
+                    >
+                      {String.fromCharCode(65 + index)}
+                    </span>
+                  </span>
+                  <span className="flex-1 font-medium text-gray-800">
+                    {option}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
         </div>
 
         {/* Explanation */}
-        {showExplanation && currentQuestion.explanation && (
-          <div className="mt-12">
-            <div className="bg-white rounded-2xl shadow-xl p-8 border-l-4 border-pink-500">
-              <div className="flex items-start">
-                <div className="text-3xl mr-4">💡</div>
-                <div>
-                  <h4 className="font-bold text-gray-800 text-xl mb-3">
-                    Uitleg
-                  </h4>
-                  <p className="text-gray-700 leading-relaxed text-lg">
-                    {currentQuestion.explanation}
-                  </p>
+        {showExplanation &&
+          currentQuestion.explanations &&
+          selectedAnswer !== undefined && (
+            <div className="mb-8">
+              <div
+                className="bg-gray-50 rounded-xl p-6 border-l-4"
+                style={{ borderColor: "var(--color-persian-pink)" }}
+              >
+                <div className="flex items-start">
+                  <div className="text-2xl mr-3">💭</div>
+                  <div>
+                    <h4 className="font-bold text-gray-800 text-lg mb-2">
+                      Over jouw keuze
+                    </h4>
+                    <p className="text-gray-700 leading-relaxed">
+                      {currentQuestion.explanations[selectedAnswer]}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Navigation */}
-        <div className="flex justify-between items-center mt-12">
-          <button
-            onClick={handlePrevious}
-            disabled={!canGoPrevious}
-            className={`px-8 py-4 rounded-full font-semibold text-lg transition-all duration-200 ${
-              canGoPrevious
-                ? "bg-white/20 text-white border-2 border-white/30 hover:bg-white/30 hover:border-white/50"
-                : "bg-white/10 text-white/40 cursor-not-allowed border-2 border-white/10"
-            }`}
-          >
-            ← Vorige
-          </button>
-
-          {hasAnswered && showExplanation && canGoNext && (
+        {/* Navigation - Only show next when explanation is shown */}
+        {hasAnswered && showExplanation && canGoNext && (
+          <div className="flex justify-center">
             <button
               onClick={handleNext}
-              className="bg-white text-pink-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-50 transform hover:scale-105 transition-all duration-200 shadow-lg"
+              className="text-white px-8 py-3 rounded-full font-semibold text-lg transition-all duration-200"
+              style={{ backgroundColor: "var(--color-persian-pink)" }}
             >
               Volgende →
             </button>
-          )}
+          </div>
+        )}
 
-          {hasAnswered && showExplanation && !canGoNext && (
+        {hasAnswered && showExplanation && !canGoNext && (
+          <div className="flex justify-center">
             <button
               onClick={() => setShowExplanation(false)}
-              className="bg-gradient-to-r from-pink-500 to-pink-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:from-pink-600 hover:to-pink-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
+              className="text-white px-8 py-3 rounded-full font-semibold text-lg transition-all duration-200"
+              style={{ backgroundColor: "var(--color-persian-pink)" }}
             >
               Bekijk Resultaat
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
