@@ -151,89 +151,101 @@ export function QuizComponent() {
       </div>
 
       {/* Main Content */}
-      <div className="px-6 py-6">
+      <div className="px-6 py-6 max-w-4xl mx-auto">
         {/* Question Title */}
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">
           What would you do in this situation?
         </h2>
 
-        {/* Scenario Image */}
-        <div className="mb-6 flex justify-center">
-          <div className="w-full max-w-sm">
-            <img
-              src={currentScenario.image}
-              alt={currentScenario.title}
-              className="w-full rounded-2xl shadow-lg"
-            />
+        {/* Desktop Grid Layout */}
+        <div className="md:grid md:grid-cols-2 md:gap-8 md:items-start">
+          {/* Left Column - Image and Description (Desktop) / Top (Mobile) */}
+          <div className="mb-6 md:mb-0">
+            {/* Scenario Image */}
+            <div className="mb-6 flex justify-center">
+              <div className="w-full max-w-sm md:max-w-none">
+                <img
+                  src={currentScenario.image}
+                  alt={currentScenario.title}
+                  className="w-full rounded-2xl shadow-lg"
+                />
+              </div>
+            </div>
+
+            {/* Scenario Description */}
+            <div className="mb-8 md:mb-0 text-center md:text-left">
+              <p className="text-gray-700 leading-relaxed">
+                {currentScenario.description}
+              </p>
+            </div>
+          </div>
+
+          {/* Right Column - Answer Options (Desktop) / Bottom (Mobile) */}
+          <div>
+            {/* Answer Options */}
+            <div className="space-y-3 mb-8">
+              {currentQuestion.options.map((option, index) => {
+                const isSelected = selectedAnswer === index;
+                const showResult = hasAnswered && showExplanation;
+
+                let buttonClasses =
+                  "w-full p-4 text-left rounded-xl border-2 transition-all duration-200 ";
+
+                if (showResult) {
+                  if (isSelected) {
+                    buttonClasses += "border-2" + " bg-blue-50";
+                    buttonClasses += " border-[var(--color-persian-pink)]";
+                  } else {
+                    buttonClasses += "bg-gray-50 border-gray-200";
+                  }
+                } else if (isSelected) {
+                  buttonClasses += "border-2" + " bg-blue-50";
+                  buttonClasses += " border-[var(--color-persian-pink)]";
+                } else {
+                  buttonClasses +=
+                    "bg-white border-gray-200 hover:border-gray-300";
+                }
+
+                return (
+                  <button
+                    key={index}
+                    onClick={() => !hasAnswered && handleAnswerSelect(index)}
+                    disabled={hasAnswered}
+                    className={buttonClasses}
+                  >
+                    <div className="flex items-center">
+                      <span
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-4 text-white"
+                        style={{
+                          backgroundColor: isSelected
+                            ? "var(--color-persian-pink)"
+                            : "#E5E7EB",
+                        }}
+                      >
+                        <span
+                          className={
+                            isSelected ? "text-white" : "text-gray-600"
+                          }
+                        >
+                          {String.fromCharCode(65 + index)}
+                        </span>
+                      </span>
+                      <span className="flex-1 font-medium text-gray-800">
+                        {option}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
-        {/* Scenario Description */}
-        <div className="mb-8 text-center">
-          <p className="text-gray-700 leading-relaxed">
-            {currentScenario.description}
-          </p>
-        </div>
-
-        {/* Answer Options */}
-        <div className="space-y-3 mb-8">
-          {currentQuestion.options.map((option, index) => {
-            const isSelected = selectedAnswer === index;
-            const showResult = hasAnswered && showExplanation;
-
-            let buttonClasses =
-              "w-full p-4 text-left rounded-xl border-2 transition-all duration-200 ";
-
-            if (showResult) {
-              if (isSelected) {
-                buttonClasses += "border-2" + " bg-blue-50";
-                buttonClasses += " border-[var(--color-persian-pink)]";
-              } else {
-                buttonClasses += "bg-gray-50 border-gray-200";
-              }
-            } else if (isSelected) {
-              buttonClasses += "border-2" + " bg-blue-50";
-              buttonClasses += " border-[var(--color-persian-pink)]";
-            } else {
-              buttonClasses += "bg-white border-gray-200 hover:border-gray-300";
-            }
-
-            return (
-              <button
-                key={index}
-                onClick={() => !hasAnswered && handleAnswerSelect(index)}
-                disabled={hasAnswered}
-                className={buttonClasses}
-              >
-                <div className="flex items-center">
-                  <span
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-4 text-white"
-                    style={{
-                      backgroundColor: isSelected
-                        ? "var(--color-persian-pink)"
-                        : "#E5E7EB",
-                    }}
-                  >
-                    <span
-                      className={isSelected ? "text-white" : "text-gray-600"}
-                    >
-                      {String.fromCharCode(65 + index)}
-                    </span>
-                  </span>
-                  <span className="flex-1 font-medium text-gray-800">
-                    {option}
-                  </span>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Explanation */}
+        {/* Explanation - Full Width Below Grid */}
         {showExplanation &&
           currentQuestion.explanations &&
           selectedAnswer !== undefined && (
-            <div className="mb-8">
+            <div className="mb-8 mt-8">
               <div
                 className="bg-gray-50 rounded-xl p-6 border-l-4"
                 style={{ borderColor: "var(--color-persian-pink)" }}
