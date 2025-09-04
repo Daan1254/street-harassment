@@ -82,25 +82,17 @@ export function QuizComponent() {
         {/* Results Content */}
         <div className="px-6 py-12 text-center">
           <div className="text-6xl mb-6">🎉</div>
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            Fantastisch!
-          </h1>
-          <div
-            className="text-6xl font-bold mb-6"
-            style={{ color: "var(--color-persian-pink)" }}
-          >
-            {score}/{totalQuestions}
-          </div>
+          <h1 className="text-4xl font-bold text-gray-800 mb-8">Well done!</h1>
           <p className="text-xl text-gray-600 mb-8">
-            Je hebt {score} van de {totalQuestions} scenario's succesvol
-            doorlopen!
+            You have completed all scenarios and learned valuable insights about
+            being a helpful bystander.
           </p>
           <button
             onClick={resetQuiz}
             className="text-white px-10 py-4 rounded-full font-bold text-lg transition-all duration-200 shadow-lg"
             style={{ backgroundColor: "var(--color-persian-pink)" }}
           >
-            Opnieuw Beginnen
+            Start Over
           </button>
         </div>
       </div>
@@ -134,7 +126,7 @@ export function QuizComponent() {
                 className="h-2 rounded-full transition-all duration-300"
                 style={{
                   backgroundColor: "var(--color-persian-pink)",
-                  width: `${(questionNumber / totalQuestions) * 100}%`,
+                  width: `${((questionNumber - 1) / totalQuestions) * 100}%`,
                 }}
               />
             </div>
